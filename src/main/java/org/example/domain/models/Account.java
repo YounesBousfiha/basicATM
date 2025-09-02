@@ -16,27 +16,27 @@ public class Account {
     }
 
 
-    int getAccountNumber() {
+    public int getAccountNumber() {
         return this.accountNumber;
     }
 
-    int getPin() {
+    public int getPin() {
         return this.pin;
     }
 
-    double getBalance() {
+    public double getBalance() {
         return this.balance;
     }
 
-    void setAccountNumber(int accountNumber) {
+    public void setAccountNumber(int accountNumber) {
         this.accountNumber = accountNumber;
     }
 
-    void setPin(int pin) {
+    public void setPin(int pin) {
         this.pin = pin;
     }
 
-    void setBalance(double balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 }
