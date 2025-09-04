@@ -16,7 +16,7 @@ public class ATMController {
         this.consoleUI = consoleUI;
     }
 
-    public void startSession() {
+    public synchronized void startSession() {
         int accountNumber = Integer.parseInt(consoleUI.readAccountNumber());
         int pin = Integer.parseInt(consoleUI.readPin());
 
@@ -68,7 +68,7 @@ class SessionTask implements Runnable {
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         System.out.println(Thread.currentThread().getName() + " started.");
         atmController.startSession();
         System.out.println(Thread.currentThread().getName() + " ended.");
