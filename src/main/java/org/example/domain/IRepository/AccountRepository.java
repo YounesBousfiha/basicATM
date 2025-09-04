@@ -3,5 +3,6 @@ import org.example.domain.models.Account;
 
 public interface AccountRepository {
     public Account findByAccountNumber(int accountNumber);
-    public Account update(Account account);
+    public void update(Account account);
+    public void save(Account account);
 }
