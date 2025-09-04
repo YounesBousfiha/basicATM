@@ -17,14 +17,14 @@ public class ConcurrentSessionManager {
         this.consoleUI = consoleUI;
     }
 
-    public void startSessions(int nSessions) {
+    public synchronized void startSessions(int nSessions) {
         for (int i = 0; i < nSessions; i++) {
             ATMController controller = new ATMController(bankService, consoleUI);
             executorService.submit(new SessionTask(controller));
         }
     }
 
-    public void shutdown() {
+    public synchronized void shutdown() {
         executorService.shutdown();
     }
 }
