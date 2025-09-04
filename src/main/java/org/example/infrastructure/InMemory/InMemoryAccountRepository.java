@@ -15,9 +15,13 @@ public class InMemoryAccountRepository implements AccountRepository {
     }
 
     @Override
-    public Account update(Account account) {
+    public void update(Account account) {
         accounts.put(account.getAccountNumber(), account);
-        return account;
+    }
+
+    @Override
+    public void save(Account account) {
+        accounts.put(account.getAccountNumber(), account);
     }
 
 
