@@ -5,6 +5,7 @@ import org.example.domain.IRepository.TransactionRepository;
 import org.example.domain.exceptions.InsufficientBalanceException;
 import org.example.domain.exceptions.NegativeAmountException;
 import org.example.domain.exceptions.UserNotFoundException;
+import org.example.domain.exceptions.WrongCredsException;
 import org.example.domain.models.Account;
 import org.example.domain.service.IBankService;
 
@@ -28,8 +29,24 @@ public class BankServiceImpl implements IBankService {
         return accountLocks.computeIfAbsent(accountNumber, k -> new ReentrantLock());
     }
 
+    public boolean authenticate(int accountNumber, int pin) {
+        try {
+            Account account = accountRepo.findByAccountNumber(accountNumber);
+            if(java.util.Objects.isNull(account)) {
+                throw new UserNotFoundException("User not Found");
+            }
+            if(account.getPin() != pin) {
+                throw new WrongCredsException("InCorrect PIN");
+            }
+            return true;
+        } catch (UserNotFoundException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
     @Override
-    public  void  withdraw(int accountNumber, double amount) {
+    public  boolean  withdraw(int accountNumber, double amount) {
         ReentrantLock lock = getLockAccount(accountNumber);
         lock.lock();
         try {
@@ -44,15 +61,17 @@ public class BankServiceImpl implements IBankService {
 
             account.setBalance(balance - amount);
             accountRepo.update(account);
+            return true;
         } catch (UserNotFoundException | InsufficientBalanceException e) {
             System.out.println(e.getMessage());
+            return false;
         } finally {
             lock.unlock();
         }
     }
 
     @Override
-    public  void deposit(int accountNumber, double amount) {
+    public  boolean deposit(int accountNumber, double amount) {
         ReentrantLock lock = getLockAccount(accountNumber);
         lock.lock();
 
@@ -66,8 +85,10 @@ public class BankServiceImpl implements IBankService {
             }
             account.setBalance(account.getBalance() + amount);
             accountRepo.update(account);
+            return true;
         } catch (UserNotFoundException | NegativeAmountException e) {
             System.out.println(e.getMessage());
+            return false;
         } finally {
             lock.unlock();
         }
