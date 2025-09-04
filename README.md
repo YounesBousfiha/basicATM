@@ -66,6 +66,12 @@ This project follows a basic DDD approach:
 - `src/main/java/org/example/application/ui` - Console UI
 - `src/main/java/org/example/infrastructure/Service` - Service layer
 
+
+## Known Bugs & Limitations
+
+- Console input/output may overlap when multiple sessions run concurrently, causing mixed prompts.
+
+
 ## Contributing
 
 1. Fork the repository
