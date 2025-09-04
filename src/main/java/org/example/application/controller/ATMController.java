@@ -3,6 +3,10 @@ package org.example.application.controller;
 import org.example.application.ui.ConsoleUI;
 import org.example.domain.service.IBankService;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class ATMController {
     private final IBankService bankService;
     private final ConsoleUI consoleUI;
@@ -54,3 +58,20 @@ public class ATMController {
 
     private void transfer(int fromAccount) {}
 }
+
+
+class SessionTask implements Runnable {
+    private final ATMController atmController;
+
+    public SessionTask(ATMController atmController) {
+        this.atmController = atmController;
+    }
+
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName() + " started.");
+        atmController.startSession();
+        System.out.println(Thread.currentThread().getName() + " ended.");
+    }
+}
+
