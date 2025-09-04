@@ -36,12 +36,9 @@ public class BankServiceImpl implements IBankService {
                     account.setBalance(account.getBalance() - amount);
                     accountRepo.update(account);
                 }
-            } catch (UserNotFoundException e) {
+            } catch (UserNotFoundException | InsufficientBalanceException e) {
                 System.out.println(e.getMessage());
-            } catch (InsufficientBalanceException e) {
-                System.out.println(e.getMessage());
-            }
-            finally {
+            } finally {
                 lock.unlock();
             }
         } else {
