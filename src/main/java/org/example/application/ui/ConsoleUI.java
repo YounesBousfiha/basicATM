@@ -6,17 +6,17 @@ public class ConsoleUI {
 
     private Scanner scanner = new Scanner(System.in);
 
-    public String readAccountNumber() {
+    public synchronized String readAccountNumber() {
         System.out.print("Enter Account Number");
         return scanner.nextLine();
     }
 
-    public String readPin() {
+    public synchronized String readPin() {
         System.out.print("Enter PIN: ");
         return scanner.nextLine();
     }
 
-    public double readAmount() {
+    public synchronized double readAmount() {
         System.out.println("Enter Amount: ");
         while(!scanner.hasNextDouble()) {
             System.out.print("Invalid. Enter numeric amount: ");
@@ -25,15 +25,15 @@ public class ConsoleUI {
         return scanner.nextDouble();
     }
 
-    public void showBalance(double balance) {
+    public synchronized void showBalance(double balance) {
         System.out.println("Current balance: " + balance);
     }
 
-    public void showMessage(String message) {
+    public synchronized void showMessage(String message) {
         System.out.println(message);
     }
 
-    public int showMenu() {
+    public synchronized int showMenu() {
         System.out.println("\n1. Check Balance");
         System.out.println("2. Withdraw");
         System.out.println("3. Deposit");
@@ -44,11 +44,11 @@ public class ConsoleUI {
         return scanner.nextInt();
     }
 
-    public void showError(String error) {
+    public synchronized void showError(String error) {
         System.err.println("Error: " + error);
     }
 
-    public String readTargetAccount() {
+    public synchronized String readTargetAccount() {
         scanner.nextLine();
         System.out.print("Enter Target account number: ");
         return scanner.nextLine();
