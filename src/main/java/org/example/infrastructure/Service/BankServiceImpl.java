@@ -8,6 +8,7 @@ import org.example.domain.exceptions.UserNotFoundException;
 import org.example.domain.models.Account;
 import org.example.domain.service.IBankService;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -33,7 +34,7 @@ public class BankServiceImpl implements IBankService {
         lock.lock();
         try {
             Account account = accountRepo.findByAccountNumber(accountNumber);
-            if(java.util.Objects.isNull(account)) {
+            if(Objects.isNull(account)) {
                 throw new UserNotFoundException("user not Found");
             }
             double balance = account.getBalance();
@@ -57,7 +58,7 @@ public class BankServiceImpl implements IBankService {
 
         try {
             Account account = accountRepo.findByAccountNumber(accountNumber);
-            if(java.util.Objects.isNull(account)) {
+            if(Objects.isNull(account)) {
                 throw new UserNotFoundException("User not Found!");
             }
             if(amount < 0) {
@@ -75,10 +76,42 @@ public class BankServiceImpl implements IBankService {
     @Override
     public  void transfer(int fromAccountNumber, int toAccountNumber, double amount) {
 
+        int first = Math.min(fromAccountNumber, toAccountNumber);
+        int second = Math.max(fromAccountNumber, toAccountNumber);
+
+        ReentrantLock lockFirst = getLockAccount(first);
+        ReentrantLock lockSecond = getLockAccount(second);
+        lockFirst.lock();
+        lockSecond.lock();
+        try {
+        Account From = accountRepo.findByAccountNumber(fromAccountNumber);
+        Account To = accountRepo.findByAccountNumber(toAccountNumber);
+        if(java.util.Objects.isNull(From) || java.util.Objects.isNull(To)) {
+            throw new UserNotFoundException("Sender or Receiver are not Found !");
+        }
+        double balance = From.getBalance();
+        if(balance < amount) {
+            throw new InsufficientBalanceException("Insufficient Balance");
+        }
+        } catch (UserNotFoundException | InsufficientBalanceException | NegativeAmountException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            lockSecond.unlock();
+            lockFirst.unlock();
+        }
     }
 
     @Override
     public  double getBalance(int accountNumber) {
-        return 0;
+        Account account = null;
+        try {
+            account = accountRepo.findByAccountNumber(accountNumber);
+            if(Objects.isNull(account)) {
+                throw new UserNotFoundException("User not Found!");
+            }
+        } catch (UserNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return account.getBalance();
     }
 }
